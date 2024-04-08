@@ -36,4 +36,21 @@ db.etapa <- process_stf(db.etapa)
 db.linkotel <- process_stf(db.linkotel)
 db.setel <- process_stf(db.setel)
 
+colnames(db.setel)[1] <- "COD DE PARROQUIA" 
+
+# join tibbles
+db.stf <- rbind(db.cirion, db.cnt, db.conecel, db.etapa, db.linkotel, db.setel)
+colnames(db.stf) <- c("DPA_PARROQ", "lineStf")
+
+db.stf <- db.stf |> group_by(DPA_PARROQ) |>
+  summarise(
+    lineStf = sum(lineStf)
+  )
+
+writexl::write_xlsx(db.stf, './STF/dfSTF.xlsx')
+
+
+
+
+
 
