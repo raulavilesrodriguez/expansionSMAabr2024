@@ -5,6 +5,8 @@ library(here)
 library(writexl)
 library(stringr)
 
+source(here::here('process_stf.R'))
+
 db.cirion <- read_excel('STF/ESTRUCTURADO_STF_CIRION_DICIEMBRE_2023.xlsx',
                         sheet = 'Estructurado'
                         )
@@ -25,11 +27,13 @@ db.setel <- read_excel('STF/ESTRUCTURADO_STF_SETEL_DICIEMBRE_2023.xlsx',
 )
 
 class(db.cirion$POPULAR)
-db.cirion[which(is.na(db.cirion[, c(11)])), 11] = 0
-db.cirion[which(is.na(db.cirion[, c(12)])), 12] = 0
-db.cirion[which(is.na(db.cirion[, c(13)])), 13] = 0
-db.cirion <- db.cirion |> mutate(total = POPULAR + RESIDENCIAL + COMERCIAL)
-db.cirion <- db.cirion |> group_by(`COD DE PARROQUIA`) |>
-  summarise(
-    total = sum(total)
-  )
+
+# Process and group the operators
+db.cirion <- process_stf(db.cirion)
+db.cnt <- process_stf(db.cnt)
+db.conecel <- process_stf(db.conecel)
+db.etapa <- process_stf(db.etapa)
+db.linkotel <- process_stf(db.linkotel)
+db.setel <- process_stf(db.setel)
+
+
