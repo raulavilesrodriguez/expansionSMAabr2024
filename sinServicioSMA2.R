@@ -72,10 +72,16 @@ df.internet.fijo <- df.internet.fijo |> group_by(DPA_PARROQ) |>
     cuentasInt = sum(cuentasInt)
   )
 
-# join tibbles
+# Variable fixed telephony
+df.telefonia.fija <- read_excel('STF/dfSTF.xlsx')
+df.telefonia.fija$DPA_PARROQ <- sapply(df.telefonia.fija$DPA_PARROQ, as.numeric)
+
+# join tibbles without service of SMA
 df.sin2 <- left_join(df.sin, df.internet.fijo, by = "DPA_PARROQ")
 df.sin2[which(is.na(df.sin2[, 9])), 9] = 0
 
+df.sin2 <- left_join(df.sin2, df.telefonia.fija, by = "DPA_PARROQ")
+df.sin2[which(is.na(df.sin2[, 10])), 10] = 0
 
 #Export tibble witout mobile service telecom
 writexl::write_xlsx(df.sin2, 'dfsinservicioSMA.xlsx')
@@ -85,6 +91,10 @@ df.total <- full_join(df.total, df.internet.fijo, by = "DPA_PARROQ")
 class(df.total$cuentasInt)
 df.total[which(is.na(df.total[, 39])), 39] = 0
 df.total[which(is.na(df.total[, 38])), 38] = 0
+
+df.total <- full_join(df.total, df.telefonia.fija, by = "DPA_PARROQ")
+df.total[which(is.na(df.total[, 40])), 40] = 0
+
 # delete duplicates
 df.total <- df.total[!duplicated(df.total$DPA_PARROQ), ]
 
