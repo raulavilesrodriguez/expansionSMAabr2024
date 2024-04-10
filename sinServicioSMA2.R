@@ -65,7 +65,7 @@ colnames(df.sin)[4] <- 'CANTÓN'
 colnames(df.sin)[6] <- 'PARROQUIA'
 
 # Variable internet fixed
-df.internet.fijo <- read_excel('./internetFijo/dfinternet.xlsx')
+df.internet.fijo <- read_excel('./internetFijo/dfinternetFINAL.xlsx')
 df.internet.fijo$DPA_PARROQ <- sapply(df.internet.fijo$DPA_PARROQ, as.numeric)
 df.internet.fijo <- df.internet.fijo |> group_by(DPA_PARROQ) |>
   summarise(
@@ -83,10 +83,18 @@ df.sin2[which(is.na(df.sin2[, 9])), 9] = 0
 df.sin2 <- left_join(df.sin2, df.telefonia.fija, by = "DPA_PARROQ")
 df.sin2[which(is.na(df.sin2[, 10])), 10] = 0
 
+df.pob2022 <- read_excel('./poblacion2022/pob2022FINAL.xlsx')
+df.pob2022$DPA_PARROQ <- sapply(df.pob2022$DPA_PARROQ, as.numeric)
+df.sin2 <- left_join(df.sin2, df.pob2022, by = "DPA_PARROQ")
+df.sin2[which(is.na(df.sin2[, 14])), 14] = 0
+
+df.sin2 <- df.sin2[, -c(11:13)]
+colnames(df.sin2)[8] <- "pob2020"
+
 #Export tibble witout mobile service telecom
 writexl::write_xlsx(df.sin2, 'dfsinservicioSMA.xlsx')
 
-# Export db TOTAL with and without service mobile telecom
+#-----Export db TOTAL with and without service mobile telecom----
 df.total <- full_join(df.total, df.internet.fijo, by = "DPA_PARROQ")
 class(df.total$cuentasInt)
 df.total[which(is.na(df.total[, 39])), 39] = 0
@@ -95,8 +103,23 @@ df.total[which(is.na(df.total[, 38])), 38] = 0
 df.total <- full_join(df.total, df.telefonia.fija, by = "DPA_PARROQ")
 df.total[which(is.na(df.total[, 40])), 40] = 0
 
+df.total <- full_join(df.pob2022, df.total, by = "DPA_PARROQ")
+df.total[which(is.na(df.total[, 4])), 4] = 0
+
+# Test Base of Data
+test.pob2022 <- ifelse(sum(df.total$pob2022)== 16938986, 'OK', 'Error')
+test.pob2022
+test.rbs <- ifelse(sum(df.total$TOTAL)== 20877, 'OK', 'Error')
+test.rbs
+test.internet.fijo <- ifelse(sum(df.total$cuentasInt) == 2889020, 'OK', 'Error')
+test.internet.fijo
+test.telf.fija <- ifelse(sum(df.total$lineStf) == 1434441, 'OK', 'Error')
+test.telf.fija
+
+duplicados <- df.total[duplicated(df.total$DPA_PARROQ), ]
+duplicados
 # delete duplicates
-df.total <- df.total[!duplicated(df.total$DPA_PARROQ), ]
+#df.total <- df.total[!duplicated(df.total$DPA_PARROQ), ]
 
 writexl::write_xlsx(df.total, 'dftotalSMA.xlsx')
 

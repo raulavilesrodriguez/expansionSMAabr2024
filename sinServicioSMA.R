@@ -59,7 +59,7 @@ df.sin <- df.rbs2 |>
 colnames(df.sin)[2] <- 'CANTÓN'
 
 # Variable internet fixed
-df.internet.fijo <- read_excel('./internetFijo/dfinternet.xlsx')
+df.internet.fijo <- read_excel('./internetFijo/dfinternetFINAL.xlsx')
 df.internet.fijo$DPA_PARROQ <- sapply(df.internet.fijo$DPA_PARROQ, as.numeric)
 df.internet.fijo <- df.internet.fijo |> group_by(DPA_PARROQ) |>
   summarise(

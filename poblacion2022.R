@@ -71,7 +71,7 @@ we <- apply(db.pob2022, 1, function(x){
 ve <- apply(we, 2, paste, collapse="")
 db.pob2022$DPA_PARROQ <- ve
 
-
+writexl::write_xlsx(db.pob2022, './poblacion2022/pob2022.xlsx')
 
 
 
