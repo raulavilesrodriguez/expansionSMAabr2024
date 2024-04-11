@@ -102,10 +102,10 @@ count(dataFinal[which(dataFinal$cluster == 9),])
 count(dataFinal[which(dataFinal$cluster == 10),])
 
 dataFinal <- dataFinal |>
-  mutate(grupo = ifelse(cluster == 1 | cluster == 2 | cluster == 6 | cluster == 7 | cluster == 8 | cluster == 10, "G1",
-                        ifelse(cluster == 3, "G2",
+  mutate(grupo = ifelse(cluster == 1 | cluster == 2 | cluster == 6 | cluster == 7 | cluster == 8 | cluster == 10, "G4",
+                        ifelse(cluster == 3, "G1",
                                ifelse(cluster == 4 , "G3", 
-                                      ifelse(cluster == 5 | cluster == 9, "G4", "G1")))))
+                                      ifelse(cluster == 5 | cluster == 9, "G2", "G1")))))
 
 dataFinal <- dataFinal |> 
   mutate(periodo = ifelse(grupo == "G1", "1-2 años",
@@ -127,8 +127,21 @@ nrow(dataFinal |> filter(grupo == "G3"))
 nrow(dataFinal |> filter(grupo == "G4"))
 
 
-dataFinal <- dataFinal |> select(-c(8))
+dataFinal <- dataFinal |> select(-c(8, 12))
 #Export tibble witout mobile service telecom
 writexl::write_xlsx(dataFinal, './ResultadosExpansión/sinservicioClasificado.xlsx')
 
 
+resumen <- dataFinal |> group_by(grupo) |>
+  summarise(
+    Población = sum(pob2022),
+    Cuentas_Internet_Fijo = sum(cuentasInt),
+    Líneas_tlf_fija = sum(lineStf),
+    Grupo_nombre = first(grupo),
+    grupo = n(),
+    ) |> rename(No_Parroquias = grupo)
+
+resumen <- resumen |> mutate(
+  porc_intFijo_pob = (Cuentas_Internet_Fijo / Población)*100,
+  porc_lineasFija_pob = (Líneas_tlf_fija / Población)*100
+  )
