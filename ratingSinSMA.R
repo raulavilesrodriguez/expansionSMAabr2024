@@ -16,6 +16,7 @@ library(cluster)    # clustering algorithms
 library(factoextra) # clustering algorithms & visualization
 library(NbClust) # to find the ideal number of clusters
 library(writexl)
+library(modelsummary)
 
 #----Read paqquias without service-------
 dfsinservicio <- read_excel('dfsinservicioSMA.xlsx')
@@ -145,3 +146,8 @@ resumen <- resumen |> mutate(
   porc_intFijo_pob = (Cuentas_Internet_Fijo / Población)*100,
   porc_lineasFija_pob = (Líneas_tlf_fija / Población)*100
   )
+
+writexl::write_xlsx(resumen, './ResultadosExpansión/resumen.xlsx')
+
+datasummary_skim(resumen)
+

@@ -123,4 +123,26 @@ duplicados
 
 writexl::write_xlsx(df.total, 'dftotalSMA.xlsx')
 
+total.parroquias <- nrow(df.total |> filter(TIPO != 'URBANO'))
+total.parroquias
+
+parroquias.con.servicio <- total.parroquias - nrow(df.sin2)
+parroquias.con.servicio
+
+# % without service
+porc.sin.servicio <- nrow(df.sin2) / total.parroquias
+porc.sin.servicio
+
+
+rbs2G <- df.total |> filter(TIPO != 'URBANO') |> 
+  mutate(rbs2G = CONECEL_2G + OTECEL_2G) |> select(rbs2G) |>
+  filter(rbs2G != 0)
+
+rbs3G <- df.total |> filter(TIPO != 'URBANO') |> 
+  mutate(rbs3G = CONECEL_3G + OTECEL_3G + CNT_3G) |> select(rbs3G) |>
+  filter(rbs3G != 0)
+
+rbs4G <- df.total |> filter(TIPO != 'URBANO') |> 
+  mutate(rbs4G = CONECEL_4G + OTECEL_4G + CNT_4G) |> select(rbs4G) |>
+  filter(rbs4G != 0)
 

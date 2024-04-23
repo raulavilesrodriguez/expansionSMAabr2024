@@ -19,12 +19,6 @@ library(writexl)
 
 
 #----Read Total file-------
-dftotal <- read_excel('dftotalSMA.xlsx')
-str(dftotal)
-
-
-
-
-
-
+df.total <- read_excel('dftotalSMA.xlsx')
+str(df.total)
 
