@@ -8,9 +8,9 @@ library(readxl)
 library(here)
 library(writexl)
 
-source(here::here('grades_to_decimal.R'))
-source(here::here('join_parroquias.R'))
-source(here::here('propagation.R'))
+source(here::here('helpers/grades_to_decimal.R'))
+source(here::here('helpers/join_parroquias.R'))
+source(here::here('helpers/propagation.R'))
 
 #________Wrangling_________
 df.poblacion <- read_excel('poblacion.xlsx')

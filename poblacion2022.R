@@ -46,7 +46,7 @@ db.poblacion2020 <- db.poblacion2020 |> mutate(
   DPA_DESPAR = stri_trans_general(DPA_DESPAR, "Latin-ASCII")
 )
 
-# all trings without extra spaces
+# all strings without extra spaces
 db.pob2022 <- db.pob2022 |> mutate(
   PROVINCIA = str_squish(PROVINCIA),
   CANTON = str_squish(CANTON),
