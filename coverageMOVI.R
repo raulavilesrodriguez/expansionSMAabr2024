@@ -7,6 +7,7 @@ library(leaflethex)
 library(readxl)
 library(here)
 library(writexl)
+library(purrr)
 
 source(here::here('helpers/grades_to_decimal.R'))
 source(here::here('helpers/join_parroquias.R'))
@@ -140,8 +141,9 @@ db.otecel <- rbind(db.otecel.GSM850,
 
 #---Join to base poblacion to determinate if is URBAN, RURAL, ETC
 tipoOtecel <- join_parroquias(db.otecel$DPA, df.poblacion)
-
-db.otecel <- cbind(db.otecel, as.matrix(tipoOtecel))
+#db.otecel <- cbind(db.otecel, as.matrix(tipoOtecel))
+tipo.o <- data.frame(map_chr(tipoOtecel, paste, collapse = " "))
+db.otecel <- cbind(db.otecel, tipo.o)
 colnames(db.otecel)[ncol(db.otecel)] <- "tipo"
 
 # to suppress duplicate to sector x y z

@@ -1,9 +1,13 @@
 {
     "sortOrder": [
         {
+            "columnIndex": 3,
+            "ascending": false
+        },
+        {
             "columnIndex": 2,
-            "ascending": true
+            "ascending": false
         }
     ],
-    "path": "C:/Users/bravi/projects/expansionSMAr"
+    "path": "C:/Users/bravi/projects/expansionSMAr/establecimientos"
 }

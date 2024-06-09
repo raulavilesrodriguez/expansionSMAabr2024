@@ -7,6 +7,7 @@ library(leaflethex)
 library(readxl)
 library(here)
 library(writexl)
+library(purrr)
 
 source(here::here('helpers/grades_to_decimal.R'))
 source(here::here('helpers/join_parroquias.R'))
@@ -33,8 +34,9 @@ colnames(db.conecel)[8] <- "DPA"
 
 #---Join to base poblacion to determinate if is URBAN, RURAL, ETC
 tipoConecel <- join_parroquias(db.conecel$DPA, df.poblacion)
-
-db.conecel <- cbind(db.conecel, as.matrix(tipoConecel))
+#db.conecel <- cbind(db.conecel, as.matrix(tipoConecel))
+tipo <- data.frame(map_chr(tipoConecel, paste, collapse = " "))
+db.conecel <- cbind(db.conecel, tipo)
 colnames(db.conecel)[ncol(db.conecel)] <- "tipo"
 
 # to suppress duplicate to sector x y z
@@ -51,6 +53,7 @@ db.conecel <- db.conecel |>
                     ifelse(tipo=='RURAL' & banda=='1900', rural1900,
                     ifelse(banda=='1900', urbana1900,
                     ifelse(tipo=='RURAL' & banda=='1700', ruralAWS, urbanaAWS))))))
+
 
 
 db.conecel2G <- db.conecel |> filter(TECNOLOGIA=='GSM')
@@ -101,6 +104,7 @@ map %>% addLayersControl(
   overlayGroups = c("2G", "3G", "4G"),
   options = layersControlOptions(collapsed = FALSE)
 )
+
 
 # Export db Conecel
 writexl::write_xlsx(db.conecel, './ResultGeoTOTAL/dbconecel.xlsx')

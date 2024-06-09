@@ -1,11 +1,18 @@
 {
     "sourceWindowGeometry": {
-        "wzo1ggsd81f4r": {
-            "ordinal": 91,
+        "w250noevsgxls": {
+            "ordinal": 122,
             "x": 1283,
-            "y": -357,
-            "width": 1920,
-            "height": 1009
+            "y": 3,
+            "width": 1366,
+            "height": 697
+        },
+        "w5lyglt9053fz": {
+            "ordinal": 124,
+            "x": 1283,
+            "y": 3,
+            "width": 1366,
+            "height": 697
         }
     }
 }

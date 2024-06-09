@@ -80,8 +80,10 @@ db.edu.claro$fases <- col.fases
 db.edu.claro <- db.edu.claro |> 
   mutate(costeo = ifelse(acceso_fibra == 0 & resultado > 100, 2*micro.min.15,
                          ifelse(acceso_fibra == 0 & resultado < 100, micro.min.15,
-                                ifelse(acceso_fibra == 1, fibeq.min.15 + resultado*fibkm.min.15, 0))
+                                ifelse(acceso_fibra == 1, resultado*fibkm.min.15, 0))
                          ))
+db.edu.claro <- db.edu.claro |>
+  mutate(costeo = ifelse(resultado < 5, 0, costeo))
 
 sum(db.edu.claro$costeo)
 
