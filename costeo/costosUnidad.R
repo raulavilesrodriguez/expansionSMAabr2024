@@ -18,17 +18,26 @@ micro.max.20 <- 50409.26
 # https://forum.huawei.com/enterprise/es/%C2%BFQu%C3%A9-distancia-pueden-recorrer-las-microondas/thread/667237165240827904-667212889045479424
 micro.range <- 100
 
-# Costs of fiber links
+# Costs nodes of fiber
 fibeq.min.15 <- 36985.07
 fibeq.max.15 <- 56017.07
 fibeq.min.20 <- 38089.39
 fibeq.max.20 <- 57121.39
 
+# Costs of fiber links
 fibkm.min.15 <- 4267.73
 fibkm.max.15 <- 6696.73
 fibkm.min.20 <- 4396.02
 fibkm.max.20 <- 6825.02
 
+# Costs of satellital solution
+plan40gb.15 <- 5934.64
+plan1tb.15 <- 13729.39
+plan2tb.15 <- 27281.62
+
+plan40gb.20 <- 6604.41
+plan1tb.20 <- 15278.86
+plan2tb.20 <- 30360.57
 
 
 

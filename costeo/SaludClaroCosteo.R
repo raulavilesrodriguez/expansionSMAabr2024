@@ -10,7 +10,7 @@ source(here::here('costeo/costosUnidad.R'))
 
 #---Data----
 db.fibra.claro <- read_excel('nodos_fibra/nodos_fibra_conecel.xlsx')
-db.salud.claro <- read_excel('coberturaSalud/saludCONECELCobertura.xlsx')
+db.salud.claro <- read_excel('coberturaSalud/saludCONECELCobertura2.xlsx')
 
 db.fibra.claro <- db.fibra.claro |> group_by(cantón) |>
   distinct()
@@ -65,22 +65,27 @@ col.fibra.s <- apply(matrix.fibra, 2, sum)
 db.salud.claro$acceso_fibra <- col.fibra.s
 
 # order base schools Claro in descendent order
-db.salud.claro <- db.salud.claro[order(-db.salud.claro$resultado),]
+db.salud.claro <- db.salud.claro[order(-db.salud.claro$distancia_min_km),]
 
 col.fases.s <- c(
-  rep("Fase 1", times = 8)
+  rep("Fase 1", times = 7)
 )
 
 db.salud.claro$fases <- col.fases.s
 
 
 db.salud.claro <- db.salud.claro |> 
-  mutate(costeo = ifelse(acceso_fibra == 0 & resultado > 100, 2*micro.min.15,
-                         ifelse(acceso_fibra == 0 & resultado < 100, micro.min.15,
-                                ifelse(acceso_fibra == 1, fibeq.min.15 + resultado*fibkm.min.15, 0))
-  ))
+  mutate(costeo_15 = ifelse(datos_moviles, 0, 
+                            ifelse(acceso_fibra == 1 & distancia_min_km < 1, 
+                                   fibkm.min.15*distancia_min_km, plan40gb.15)))
 
-sum(db.salud.claro$costeo)
+db.salud.claro <- db.salud.claro |> 
+  mutate(costeo_20 = ifelse(datos_moviles, 0, 
+                            ifelse(acceso_fibra == 1 & distancia_min_km < 1, 
+                                   fibkm.min.20*distancia_min_km, plan40gb.20)))
+
+sum(db.salud.claro$costeo_15)
+sum(db.salud.claro$costeo_20)
 
 #Export tibble with companies classified
 writexl::write_xlsx(db.salud.claro, 'costeo/saludConecelCosteado.xlsx')

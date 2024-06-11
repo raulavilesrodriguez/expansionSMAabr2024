@@ -10,7 +10,7 @@ source(here::here('costeo/costosUnidad.R'))
 
 #---Data----
 db.fibra.claro <- read_excel('nodos_fibra/nodos_fibra_conecel.xlsx')
-db.edu.claro <- read_excel('coberturaEducación/educaciónConecelCobertura.xlsx')
+db.edu.claro <- read_excel('coberturaEducación/educaciónCONECELCobertura2.xlsx')
 
 db.fibra.claro <- db.fibra.claro |> group_by(cantón) |>
   distinct()
@@ -65,7 +65,7 @@ col.fibra <- apply(matrix.fibra, 2, sum)
 db.edu.claro$acceso_fibra <- col.fibra
 
 # order base schools Claro in descendent order
-db.edu.claro <- db.edu.claro[order(-db.edu.claro$resultado),]
+db.edu.claro <- db.edu.claro[order(-db.edu.claro$distancia_min_km),]
 
 col.fases <- c(
   rep("Fase 1", times = 702), 
@@ -75,17 +75,21 @@ col.fases <- c(
   )
 
 db.edu.claro$fases <- col.fases
+db.edu.claro$datos_moviles <- as.logical(db.edu.claro$datos_moviles)
 
 
 db.edu.claro <- db.edu.claro |> 
-  mutate(costeo = ifelse(acceso_fibra == 0 & resultado > 100, 2*micro.min.15,
-                         ifelse(acceso_fibra == 0 & resultado < 100, micro.min.15,
-                                ifelse(acceso_fibra == 1, resultado*fibkm.min.15, 0))
-                         ))
-db.edu.claro <- db.edu.claro |>
-  mutate(costeo = ifelse(resultado < 5, 0, costeo))
+  mutate(costeo_15 = ifelse(datos_moviles, 0, 
+                         ifelse(acceso_fibra == 1 & distancia_min_km < 1, 
+                                fibkm.min.15*distancia_min_km, plan40gb.15)))
 
-sum(db.edu.claro$costeo)
+db.edu.claro <- db.edu.claro |> 
+  mutate(costeo_20 = ifelse(datos_moviles, 0, 
+                            ifelse(acceso_fibra == 1 & distancia_min_km < 1, 
+                                   fibkm.min.20*distancia_min_km, plan40gb.20)))
+
+sum(db.edu.claro$costeo_15)
+sum(db.edu.claro$costeo_20)
 
 #Export tibble with companies classified
 writexl::write_xlsx(db.edu.claro, 'costeo/educaciónConecelCosteado.xlsx')
